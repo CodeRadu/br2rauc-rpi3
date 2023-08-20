@@ -1,4 +1,2 @@
-#include "../../../arm/boot/dts/bcm2711-rpi-4-b.dts"
-
-#include "custom-4-b.dtsi"
+#include "../../../arm/boot/dts/bcm2837-rpi-3-b-plus.dts"
 
