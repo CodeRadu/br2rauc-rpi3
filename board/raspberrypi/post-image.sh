@@ -7,7 +7,7 @@ BOARD_NAME="$(basename ${BOARD_DIR})"
 GENIMAGE_CFG="${BOARD_DIR}/genimage.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 GENBOOTFS_CFG="${BOARD_DIR}/genbootfs-${BOARD_NAME}.cfg"
-RAUC_COMPATIBLE="${2:-br2rauc-rpi4-64}"
+RAUC_COMPATIBLE="${2:-br2rauc-rpi3-64}"
 
 # Pass VERSION as an environment variable (eg: export from a top-level Makefile)
 # If VERSION is unset, fallback to the Buildroot version
@@ -86,7 +86,10 @@ ${HOST_DIR}/bin/rauc bundle \
 # Parse update.raucb and generate initial rauc.status file
 # FIXME: There is probably a MUCH better way to do this,
 #        suggestions welcome!
-eval $(rauc --keyring ${BR2_EXTERNAL_BR2RAUC_PATH}/openssl-ca/dev/ca.cert.pem --output-format=shell info ${BINARIES_DIR}/update.raucb)
+rauc --keyring ${BR2_EXTERNAL_BR2RAUC_PATH}/openssl-ca/dev/ca.cert.pem --output-format=shell info ${BINARIES_DIR}/update.raucb > bundle-info
+sed -i '/error/d' bundle-info
+source bundle-info
+rm bundle-info
 
 cat > ${BINARIES_DIR}/rauc.status << EOF
 [slot.rescue.0]
