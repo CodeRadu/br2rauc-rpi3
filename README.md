@@ -39,7 +39,7 @@ cd ~/MyWorkDir
 
 # Pull in the required projects
 git clone https://github.com/CodeRadu/br2rauc-rpi3 .
-git submodule init --update
+git submodule update --init
 
 # Create the certficate and keyring files needed for signing RAUC bundles
 # Optional: Pass CA and ORG as arguments: openssl-ca.sh [ ORG [ CA ]]
