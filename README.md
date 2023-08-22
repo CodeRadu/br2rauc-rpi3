@@ -3,7 +3,8 @@
 ## Overview
 
 This project is a fork of the original [Buildroot + Rauc](https://github.com/cdsteinkuehler/br2rauc) project  
-br2rauc-rpi3 supports only the Raspberry PI 3 B and B+
+br2rauc-rpi3 supports both the Raspberry PI 3 B/B+ and the Raspberry PI 4 B  
+br2rauc-rpi3 does **not** support the compute module 4 (yet)
 
 #### Current features:
 
@@ -49,6 +50,9 @@ git submodule update --init
 # Setup buildroot, keeping build artifacts outside the buildroot tree
 # Note paths are relative to the buildroot directory
 make -C lib/buildroot/ BR2_EXTERNAL=../../ O=../../output raspberrypi3-64-rauc_defconfig
+
+# Or for the RPI 4
+make -C lib/buildroot/ BR2_EXTERNAL=../../ O=../../output raspberrypi4-64-rauc_defconfig
 
 # You can now run standard buildroot make commands with no options
 # directly from the output directory

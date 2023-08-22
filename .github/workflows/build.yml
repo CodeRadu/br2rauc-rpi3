@@ -1,0 +1,61 @@
+on:
+  release:
+    types: [created]
+
+jobs:
+  get_configs:
+    name: Get configs
+    runs-on: ubuntu-latest
+    outputs:
+      configs: ${{ steps.configs.outputs.configs }}
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3.0.2
+      - name: Get available configs
+        id: configs
+        run: |
+          declare -a configs
+          cd configs
+          for config in *; do
+            echo "Found ${config}"
+            configs+=(\"${config}\",)
+          done
+          configs=$(echo ${configs[@]} | rev | cut -c 2- | rev)
+          echo "::set-output name=configs::[$configs]"
+      - name:
+        id: print_configs
+        run: |
+          echo ${{ steps.configs.outputs.configs }}
+  build:
+    name: "Build config ${{matrix.config}}"
+    needs: [get_configs]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config: ${{fromJson(needs.get_configs.outputs.configs)}}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3.0.2
+      - name: Update submodules
+        run: |
+          git submodule update --init
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y make gcc g++ bzip2 unzip bmap-tools cpio rsync bc
+      - name: Build config ${{ matrix.config }}
+        run: |
+          make -C lib/buildroot/ BR2_EXTERNAL=../../ O=../../output ${{ matrix.config }}
+          cd output
+          make -j $(nproc)
+      - name: Upload sdcard image to GitHub release
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          file: output/images/sdcard.img.xz
+          asset_name: sdcard_${{ matrix.config }}.img.xz
+      - name: Upload rauc bundle to GitHub release
+        uses: svenstaro/upload-release-action@2.7.0
+        with:
+          file: output/images/rootfs.raucb
+          asset_name: rootfs_${{ matrix.config }}.raucb
+            

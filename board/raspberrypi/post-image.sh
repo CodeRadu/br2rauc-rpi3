@@ -7,7 +7,7 @@ BOARD_NAME="$(basename ${BOARD_DIR})"
 GENIMAGE_CFG="${BOARD_DIR}/genimage.cfg"
 GENIMAGE_TMP="${BUILD_DIR}/genimage.tmp"
 GENBOOTFS_CFG="${BOARD_DIR}/genbootfs-${BOARD_NAME}.cfg"
-RAUC_COMPATIBLE="${2:-br2rauc-rpi3-64}"
+RAUC_COMPATIBLE="${2:-br2rauc-rpi-64}"
 
 # Pass VERSION as an environment variable (eg: export from a top-level Makefile)
 # If VERSION is unset, fallback to the Buildroot version
